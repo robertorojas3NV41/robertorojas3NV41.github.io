@@ -10,8 +10,7 @@ import {
 } from "./seguridad.js";
 import {
   checksRoles,
-  guardaUsuario,
-  selectPasatiempos
+  guardaUsuario
 } from "./usuarios.js";
 
 /** @type {HTMLFormElement} */
@@ -31,8 +30,6 @@ async function protege(usuario) {
     ["Administrador"])) {
     forma.addEventListener(
       "submit", guarda);
-    selectPasatiempos(
-      forma.pasatiempoId, "");
     checksRoles(listaRoles, []);
   }
 }
