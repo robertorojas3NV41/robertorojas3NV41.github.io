@@ -56,6 +56,9 @@ async function busca() {
       forma.cue.value = id || "";
       img.src =
         await urlStorage(id);
+            selectPasatiempos(
+        forma.pasatiempoId,
+        data.pasatiempoId)
       checksRoles(
         listaRoles, data.rolIds);
       forma.addEventListener(
