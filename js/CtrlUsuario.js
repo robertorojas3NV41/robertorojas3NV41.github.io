@@ -52,9 +52,6 @@ async function busca() {
     if (doc.exists) {
       const data = doc.data();
       forma.cue.value = id || "";
-            selectPasatiempos(
-        forma.pasatiempoId,
-        data.pasatiempoId)
       checksRoles(
         listaRoles, data.rolIds);
       forma.addEventListener(
