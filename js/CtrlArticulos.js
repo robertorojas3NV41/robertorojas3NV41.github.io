@@ -23,8 +23,6 @@ const daoPasatiempo = firestore.
   collection("Pasatiempo");
 const daoUsuario = firestore.
   collection("Usuario");
-const daoArticulos = firestore.
-  collection("Articulos");
 
 getAuth().onAuthStateChanged(
   protege, muestraError);
@@ -34,13 +32,13 @@ getAuth().onAuthStateChanged(
     usuario */
 async function protege(usuario) {
   if (tieneRol(usuario,
-    ["Cliente"])) {
+    ["Administrador"])) {
     consulta();
   }
 }
 
 function consulta() {
-  daoArticulo.onSnapshot(
+  daoUsuario.onSnapshot(
     htmlLista, errConsulta);
 }
 
@@ -53,11 +51,11 @@ async function htmlLista(snap) {
   if (snap.size > 0) {
     /** @type {
           Promise<string>[]} */
-    let Articulos = [];
-    snap.forEach(doc => Articulos.
+    let usuarios = [];
+    snap.forEach(doc => usuarios.
       push(htmlFila(doc)));
     const htmlFilas =
-      await Promise.all(Articulos);
+      await Promise.all(usuarios);
     /* Junta el todos los
      * elementos del arreglo en
      * una cadena. */
@@ -65,7 +63,8 @@ async function htmlLista(snap) {
   } else {
     html += /* html */
       `<li class="vacio">
-        -- La tienda no tiene articulos en este momento. --
+        -- No hay usuarios
+        registrados. --
       </li>`;
   }
   lista.innerHTML = html;
@@ -82,6 +81,11 @@ async function htmlFila(doc) {
   const data = doc.data();
   const img = cod(
     await urlStorage(doc.id));
+  const pasatiempo =
+    await buscaPasatiempo(
+      data.pasatiempoId);
+  const roles =
+    await buscaRoles(data.rolIds);
   const parámetros =
     new URLSearchParams();
   parámetros.append("id", doc.id);
@@ -95,15 +99,67 @@ async function htmlFila(doc) {
             alt="Falta el Avatar">
         </span>
         <span class="texto">
-          <strong class="primario">
-        ${cod(data.nombre)}
-      </strong>
-      </span>
-      <span class="secundario">
-        ${cod(data.precio)}
-      </span>
+          <strong
+              class="primario">
+            ${cod(doc.id)}
+          </strong>
+          <span
+              class="secundario">
+            ${pasatiempo}<br>
+            ${roles}
+          </span>
+        </span>
       </a>
     </li>`);
+}
+
+/** Recupera el html de un
+ * pasatiempo en base a su id.
+ * @param {string} id */
+async function
+  buscaPasatiempo(id) {
+  if (id) {
+    const doc =
+      await daoPasatiempo.
+        doc(id).
+        get();
+    if (doc.exists) {
+      /**
+       * @type {import(
+          "./tipos.js").
+            Pasatiempo} */
+      const data = doc.data();
+      return (/* html */
+        `${cod(data.nombre)}`);
+    }
+  }
+  return "-- Sin Pasatiempo --";
+}
+
+/** Recupera el html de los
+ * roles en base a sus id
+ * @param {string[]} ids */
+async function buscaRoles(ids) {
+  let html = "";
+  if (ids && ids.length > 0) {
+    for (const id of ids) {
+      const doc = await daoRol.
+        doc(id).
+        get();
+      /**
+       * @type {
+      import("./tipos.js").Rol} */
+      const data = doc.data();
+      html += /* html */
+        `<em>${cod(doc.id)}</em>
+        <br>
+        ${cod(data.descripción)}
+        <br>`;
+    }
+    return html;
+  } else {
+    return "-- Sin Roles --";
+  }
 }
 
 /** @param {Error} e */
