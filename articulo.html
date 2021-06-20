@@ -37,36 +37,44 @@
     <mi-nav></mi-nav>
     <header>
       <h1>
-        <output name="cue">
           Usuario
           <mi-progreso>
           </mi-progreso>
         </output>
       </h1>
       <div class="herramientas">
-        <a href="usuarios.html">
-          Cancelar</a>
+        <a href="articulos.html">
+          Volver</a>
         <button>Guardar</button>
         <button name="eliminar"
           type="button">
           Eliminar
         </button>
       </div>
+    <h1>Nombre</h1>
+      <div class="herramientas">
+        <input name="nombre"
+          required
+          placeholder="Mensaje">
+      </div>
+      <h1>Precio</h1>
+      <div class="herramientas">
+        <input name="precio"
+          required
+          placeholder="Mensaje">
+      </div>
+      <h1>Descripcion</h1>
+      <div class="herramientas">
+        <input name="descripcion"
+          required
+          placeholder="Mensaje">
+        <button>Enviar</button>
+      </div>
     </header>
-    <fieldset>
-      <legend>Roles</legend>
-      <ul id="listaRoles"
-        class="checks">
-        <li>
-          <mi-progreso>
-          </mi-progreso>
-        </li>
-      </ul>
-    </fieldset>
     <mi-footer></mi-footer>
   </form>
   <script type="module"
-    src="js/CtrlUsuario.js">
+    src="js/CtrlArticulo.js">
     </script>
 </body>
 </html>
