@@ -13,6 +13,7 @@ import {
 
 const daoArticulo = getFirestore().
   collection("Articulos");
+let usuarioId = "";
 /** @type {HTMLFormElement} */
 const forma = document["forma"];
 /** @type {HTMLUListElement} */
@@ -28,6 +29,7 @@ getAuth().onAuthStateChanged(
 async function protege(usuario) {
   if (tieneRol(usuario,
     ["Cliente"])) {
+    usuarioId = usuario.email;
     consulta();
     forma.addEventListener(
       "submit", agrega);
