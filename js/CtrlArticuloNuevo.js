@@ -12,11 +12,8 @@ import {
 } from "./seguridad.js";
 
 
-const daoMensaje = getFirestore().
-  collection("Mensaje");
 const daoArticulos = getFirestore().
   collection("Articulos");
-let usuarioId = "";
 /** @type {HTMLFormElement} */
 const forma = document["forma"];
 /** @type {HTMLUListElement} */
@@ -32,7 +29,6 @@ getAuth().onAuthStateChanged(
 async function protege(usuario) {
   if (tieneRol(usuario,
     ["Cliente"])) {
-    usuarioId = usuario.email;
     consulta();
     forma.addEventListener(
       "submit", agrega);
