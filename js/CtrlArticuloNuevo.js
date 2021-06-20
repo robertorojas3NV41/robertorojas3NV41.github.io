@@ -10,6 +10,9 @@ import {
 import {
   tieneRol
 } from "./seguridad.js";
+import {
+  urlStorage
+} from "../lib/storage.js";
 
 const daoMensaje = getFirestore().
   collection("Mensaje");
@@ -146,17 +149,25 @@ function htmlFila(doc) {
    * @type {import("./tipos.js").
                       Mensaje} */
   const data = doc.data();
+  const img = cod(
+    await urlStorage(doc.id));
   /* Agrega un li con los datos
    * del documento, los cuales se
    * codifican para evitar
    * inyección de código. */
   return ( /* html */
-    `<li class="fila">
+    `<li class="fila conImagen">
       <strong class="primario">
         ${cod(data.nombre)}
       </strong>
+      <span class="marco">
+          <img src="${img}"
+            alt="Falta el Avatar">
+        </span>
       <span class="secundario">
         ${cod(data.precio)}
+      </span><span class="secundario">
+        ${cod(data.descripcion)}
       </span>
     </li>`);
 }
