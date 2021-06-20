@@ -11,8 +11,8 @@ import {
   tieneRol
 } from "./seguridad.js";
 
-const daoArticulo = getFirestore().
-  collection("Articulos");
+const daoMensaje = getFirestore().
+  collection("Mensaje");
 let usuarioId = "";
 /** @type {HTMLFormElement} */
 const forma = document["forma"];
@@ -45,23 +45,24 @@ async function agrega(evt) {
     const formData =
       new FormData(forma);
     /** @type {string} */
-    const nombre = getString(
-      formData, "nombre").trim();
-    const precio = getString(
-      formData, "precio").trim();
-    const descripcion = getString(
-      formData, "descripcion").trim();
+    const texto = getString(
+      formData, "texto").trim();
+    const timestamp =
+      // @ts-ignore
+      firebase.firestore.
+        FieldValue.
+        serverTimestamp();
     /** @type {import(
         "./tipos.js").Mensaje} */
     const modelo = {
-      descripcion: descripcion,
-      nombre: nombre,
-      precio: precio
+      usuarioId,
+      texto,
+      timestamp
     };
     /* El modelo se agrega a
      * la colección
-     * "Articulos". */
-    await daoArticulo..doc(nombre).set(modelo);
+     * "Mensaje". */
+    await daoMensaje.add(modelo);
     forma.texto.value = "";
   } catch (e) {
     muestraError(e);
