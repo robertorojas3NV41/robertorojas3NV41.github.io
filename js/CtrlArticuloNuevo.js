@@ -52,9 +52,6 @@ async function agrega(evt) {
     /** @type {string} */
     const nombre = getString(
       formData, "nombre").trim();
-    const imagenArticulo =
-      formData.get("imagenArticulo");
-    await subeStorage(nombre, imagenArticulo);
     const precio = getString(
       formData, "precio").trim();
     const descripcion = getString(
