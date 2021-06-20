@@ -13,6 +13,8 @@ import {
 
 const daoMensaje = getFirestore().
   collection("Mensaje");
+const daoArticulos = getFirestore().
+  collection("Articulos");
 let usuarioId = "";
 /** @type {HTMLFormElement} */
 const forma = document["forma"];
@@ -83,7 +85,6 @@ function consulta() {
    * de forma
    *  descendente. */
   daoMensaje.
-    orderBy("timestamp", "desc").
     onSnapshot(
       htmlLista, errConsulta);
 }
@@ -148,10 +149,10 @@ function htmlFila(doc) {
   return ( /* html */
     `<li class="fila">
       <strong class="primario">
-        ${cod(data.usuarioId)}
+        ${cod(data.nombre)}
       </strong>
       <span class="secundario">
-        ${cod(data.texto)}
+        ${cod(data.precio)}
       </span>
     </li>`);
 }
