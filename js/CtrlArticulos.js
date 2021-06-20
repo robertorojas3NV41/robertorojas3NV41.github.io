@@ -3,26 +3,25 @@ import {
   getFirestore
 } from "../lib/fabrica.js";
 import {
-  urlStorage
-} from "../lib/storage.js";
-import {
   cod,
+  getString,
   muestraError
 } from "../lib/util.js";
 import {
   tieneRol
 } from "./seguridad.js";
 
+
+const daoMensaje = getFirestore().
+  collection("Mensaje");
+const daoArticulos = getFirestore().
+  collection("Articulos");
+let usuarioId = "";
+/** @type {HTMLFormElement} */
+const forma = document["forma"];
 /** @type {HTMLUListElement} */
 const lista = document.
   querySelector("#lista");
-const firestore = getFirestore();
-const daoRol = firestore.
-  collection("Rol");
-const daoPasatiempo = firestore.
-  collection("Pasatiempo");
-const daoUsuario = firestore.
-  collection("Usuario");
 
 getAuth().onAuthStateChanged(
   protege, muestraError);
@@ -32,138 +31,112 @@ getAuth().onAuthStateChanged(
     usuario */
 async function protege(usuario) {
   if (tieneRol(usuario,
-    ["Administrador"])) {
+    ["Cliente"])) {
+    usuarioId = usuario.email;
     consulta();
+    forma.addEventListener(
+      "submit", agrega);
   }
 }
 
+/** Muestra los mensajes
+ * almacenados en la collection
+ * "Mensaje". Se actualiza
+ * automáticamente. */
 function consulta() {
-  daoUsuario.onSnapshot(
-    htmlLista, errConsulta);
+  /* Consulta que se actualiza
+   * automáticamente. Pide todos
+   * los registros de la colección
+   *  "Mensaje"
+   * ordenados por el campo
+   *  "timestamp"
+   * de forma
+   *  descendente. */
+  daoArticulos.
+    onSnapshot(
+      htmlLista, errConsulta);
 }
 
-/**
+/** Muestra los datos enviados por
+ * el servidor.
+ * Si los datos cambian en el
+ * servidor, se vuelve a invocar
+ * esta función y recibe los datos
+ * actualizados.
  * @param {import(
     "../lib/tiposFire.js").
-    QuerySnapshot} snap */
-async function htmlLista(snap) {
+    QuerySnapshot} snap estructura
+ *    parecida a un Array, que
+ *    contiene una copia de los
+ *    datos del servidor.
+ */
+function htmlLista(snap) {
   let html = "";
   if (snap.size > 0) {
-    /** @type {
-          Promise<string>[]} */
-    let usuarios = [];
-    snap.forEach(doc => usuarios.
-      push(htmlFila(doc)));
-    const htmlFilas =
-      await Promise.all(usuarios);
-    /* Junta el todos los
-     * elementos del arreglo en
-     * una cadena. */
-    html += htmlFilas.join("");
+    /* Cuando el número de
+     * documentos devueltos por la
+     * consulta es mayor que 0,
+     * revisa uno por uno los
+     * documentos de la consulta y
+     * los muestra. El iterador
+     * "doc" apunta a un
+     * documento de la base
+     * de datos. */
+    snap.forEach(doc =>
+      html += htmlFila(doc));
   } else {
+    /* Cuando el número de
+     * documentos devueltos por la
+     * consulta es igual a 0,
+     * agrega un texto HTML. */
     html += /* html */
       `<li class="vacio">
-        -- No hay usuarios
+        -- No hay mensajes
         registrados. --
       </li>`;
   }
   lista.innerHTML = html;
 }
 
-/**
+/** Agrega el texto HTML
+ * que corresponde a un
+ * documento de un mensaje.
  * @param {import(
     "../lib/tiposFire.js").
     DocumentSnapshot} doc */
-async function htmlFila(doc) {
-  /**
+function htmlFila(doc) {
+  /** Recupera los datos del
+   * documento.
    * @type {import("./tipos.js").
-                      Usuario} */
+                      Mensaje} */
   const data = doc.data();
-  const img = cod(
-    await urlStorage(doc.id));
-  const pasatiempo =
-    await buscaPasatiempo(
-      data.pasatiempoId);
-  const roles =
-    await buscaRoles(data.rolIds);
-  const parámetros =
-    new URLSearchParams();
-  parámetros.append("id", doc.id);
-  return (/* html */
-    `<li>
-      <a class="fila conImagen"
-          href=
-    "usuario.html?${parámetros}">
-        <span class="marco">
-          <img src="${img}"
-            alt="Falta el Avatar">
-        </span>
-        <span class="texto">
-          <strong
-              class="primario">
-            ${cod(doc.id)}
-          </strong>
-          <span
-              class="secundario">
-            ${pasatiempo}<br>
-            ${roles}
-          </span>
-        </span>
-      </a>
+  /* Agrega un li con los datos
+   * del documento, los cuales se
+   * codifican para evitar
+   * inyección de código. */
+  return ( /* html */
+    `<li class="fila conImagen">
+      <strong class="primario">
+        ${cod(data.nombre)}
+      </strong>
+      <span class="secundario">
+        ${cod(data.precio)}
+      </span><span class="secundario">
+        ${cod(data.descripcion)}
+      </span>
     </li>`);
 }
 
-/** Recupera el html de un
- * pasatiempo en base a su id.
- * @param {string} id */
-async function
-  buscaPasatiempo(id) {
-  if (id) {
-    const doc =
-      await daoPasatiempo.
-        doc(id).
-        get();
-    if (doc.exists) {
-      /**
-       * @type {import(
-          "./tipos.js").
-            Pasatiempo} */
-      const data = doc.data();
-      return (/* html */
-        `${cod(data.nombre)}`);
-    }
-  }
-  return "-- Sin Pasatiempo --";
-}
-
-/** Recupera el html de los
- * roles en base a sus id
- * @param {string[]} ids */
-async function buscaRoles(ids) {
-  let html = "";
-  if (ids && ids.length > 0) {
-    for (const id of ids) {
-      const doc = await daoRol.
-        doc(id).
-        get();
-      /**
-       * @type {
-      import("./tipos.js").Rol} */
-      const data = doc.data();
-      html += /* html */
-        `<em>${cod(doc.id)}</em>
-        <br>
-        ${cod(data.descripción)}
-        <br>`;
-    }
-    return html;
-  } else {
-    return "-- Sin Roles --";
-  }
-}
-
-/** @param {Error} e */
+/** Función que se invoca cuando
+ * hay un error al recuperar los
+ * mensajes y muestra el error. Al
+ * invocar esta función, la
+ * conexión se cancela, por lo
+ * cual intenta conectarse otra
+ * vez.
+ * @param {Error} e */
 function errConsulta(e) {
   muestraError(e);
+  // Intenta conectarse otra vez.
   consulta();
 }
