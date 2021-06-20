@@ -84,7 +84,7 @@ function consulta() {
    *  "timestamp"
    * de forma
    *  descendente. */
-  daoMensaje.
+  daoArticulos.
     onSnapshot(
       htmlLista, errConsulta);
 }
