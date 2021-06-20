@@ -110,6 +110,9 @@ function htmlFila(doc) {
    * @type {import("./tipos.js").
                       Mensaje} */
   const data = doc.data();
+  const parámetros =
+    new URLSearchParams();
+  parámetros.append("id", doc.id);
   /* Agrega un li con los datos
    * del documento, los cuales se
    * codifican para evitar
@@ -117,7 +120,9 @@ function htmlFila(doc) {
   return ( /* html */
     `<li class="fila conImagen">
       <strong class="primario">
+      <a href="articulo.html?${parámetros}">
         ${cod(data.nombre)}
+      </a>
       </strong>
       <span class="secundario">
         ${cod(data.precio)}
