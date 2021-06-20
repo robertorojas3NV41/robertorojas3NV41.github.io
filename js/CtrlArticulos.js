@@ -52,9 +52,9 @@ async function agrega(evt) {
     /** @type {import(
         "./tipos.js").Mensaje} */
     const modelo = {
+      descripcion,
       nombre,
-      precio,
-      descripcion
+      precio
     };
     /* El modelo se agrega a
      * la colección
