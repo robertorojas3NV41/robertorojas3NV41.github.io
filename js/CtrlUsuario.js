@@ -78,7 +78,6 @@ async function elimina() {
       "eliminación")) {
       await daoUsuario.
         doc(id).delete();
-      await eliminaStorage(id);
       muestraUsuarios();
     }
   } catch (e) {
