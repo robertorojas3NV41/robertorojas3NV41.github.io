@@ -52,14 +52,14 @@ async function agrega(evt) {
     /** @type {import(
         "./tipos.js").Mensaje} */
     const modelo = {
-      descripcion,
-      nombre,
-      precio
+      descripcion: descripcion,
+      nombre: nombre,
+      precio: precio
     };
     /* El modelo se agrega a
      * la colección
      * "Articulos". */
-    await daoArticulo.add(modelo);
+    await daoArticulo..doc(nombre).set(modelo);
     forma.texto.value = "";
   } catch (e) {
     muestraError(e);
