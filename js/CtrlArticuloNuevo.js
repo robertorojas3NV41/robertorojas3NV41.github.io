@@ -64,7 +64,7 @@ async function agrega(evt) {
     /* El modelo se agrega a
      * la colección
      * "Mensaje". */
-    await daoArticulos.doc(nombre).set(modelo);
+    await daoArticulos.add(modelo);
     forma.nombre.value = "";
     forma.precio.value = "";
     forma.descripcion.value = "";
