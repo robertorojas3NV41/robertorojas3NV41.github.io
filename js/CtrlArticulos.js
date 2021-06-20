@@ -47,24 +47,23 @@ async function agrega(evt) {
     const formData =
       new FormData(forma);
     /** @type {string} */
-    const texto = getString(
-      formData, "texto").trim();
-    const timestamp =
-      // @ts-ignore
-      firebase.firestore.
-        FieldValue.
-        serverTimestamp();
+    const nombre = getString(
+      formData, "nombre").trim();
+    const precio = getString(
+      formData, "precio").trim();
+    const descripcion = getString(
+      formData, "descripcion").trim();
     /** @type {import(
         "./tipos.js").Mensaje} */
     const modelo = {
-      usuarioId,
-      texto,
-      timestamp
+      descripcion,
+      nombre,
+      precio
     };
     /* El modelo se agrega a
      * la colección
      * "Mensaje". */
-    await daoMensaje.add(modelo);
+    await daoArticulos.add(modelo);
     forma.texto.value = "";
   } catch (e) {
     muestraError(e);
