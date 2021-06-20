@@ -64,6 +64,9 @@ async function agrega(evt) {
      * la colección
      * "Mensaje". */
     await daoArticulos.add(modelo);
+    const imagenArticulo =
+      formData.get("imagenArticulo");
+    await subeStorage(Articulos, imagenArticulo);
     forma.nombre.value = "";
     forma.precio.value = "";
     forma.descripcion.value = "";
