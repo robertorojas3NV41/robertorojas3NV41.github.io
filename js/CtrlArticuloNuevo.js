@@ -11,6 +11,7 @@ import {
   tieneRol
 } from "./seguridad.js";
 
+let imagen = 
 const daoMensaje = getFirestore().
   collection("Mensaje");
 const daoArticulos = getFirestore().
@@ -63,7 +64,7 @@ async function agrega(evt) {
     /* El modelo se agrega a
      * la colección
      * "Mensaje". */
-    await daoArticulos.add(modelo);
+    await daoArticulos.doc(nombre).set(modelo);
     forma.nombre.value = "";
     forma.precio.value = "";
     forma.descripcion.value = "";
