@@ -5,7 +5,7 @@
   <meta name="viewport"
     content="width=device-width,
        initial-scale=1.0">
-  <title>Chat</title>
+  <title>Pasatiempos</title>
   <script
     src="https://www.gstatic.com/firebasejs/8.5.0/firebase-app.js">
     </script>
@@ -31,38 +31,21 @@
 </head>
 <body>
   <mi-nav></mi-nav>
-  <form name="forma">
-    <header>
-      <h1>Nombre</h1>
-      <div class="herramientas">
-        <input name="nombre"
-          required
-          placeholder="Mensaje">
-        <button>Enviar</button>
-      </div>
-      <h1>Precio</h1>
-      <div class="herramientas">
-        <input name="precio"
-          required
-          placeholder="Mensaje">
-        <button>Enviar</button>
-      </div>
-      <h1>Descripcion</h1>
-      <div class="herramientas">
-        <input name="descripcion"
-          required
-          placeholder="Mensaje">
-        <button>Enviar</button>
-      </div>
-    </header>
-    <ul id="lista" class="lista">
-      <li>
-        <mi-progreso>
-        </mi-progreso>
-      </li>
-    </ul>
-    <mi-footer></mi-footer>
-  </form>
+  <header>
+    <h1>Pasatiempos</h1>
+    <div class="herramientas">
+      <a
+        href="articuloNuevo.html">
+        Agregar…</a>
+    </div>
+  </header>
+  <ul id="lista" class="lista">
+    <li>
+      <mi-progreso>
+      </mi-progreso>
+    </li>
+  </ul>
+  <mi-footer></mi-footer>
   <script type="module"
     src="js/CtrlArticulos.js">
     </script>
