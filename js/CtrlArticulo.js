@@ -26,6 +26,8 @@ const params =
 const id = params.get("id");
 const daoUsuario = getFirestore().
   collection("Usuario");
+const daoArticulos = getFirestore().
+  collection("Articulos");
 /** @type {HTMLFormElement} */
 const forma = document["forma"];
 /** @type {HTMLUListElement} */
@@ -39,21 +41,18 @@ getAuth().onAuthStateChanged(
     usuario */
 async function protege(usuario) {
   if (tieneRol(usuario,
-    ["Administrador"])) {
+    ["Trabajador"])) {
     busca();
   }
 }
 
 async function busca() {
   try {
-    const doc = await daoUsuario.
+    const doc = await daoArticulos.
       doc(id).
       get();
     if (doc.exists) {
       const data = doc.data();
-      forma.cue.value = id || "";
-      checksRoles(
-        listaRoles, data.rolIds);
       forma.addEventListener(
         "submit", guarda);
       forma.eliminar.
@@ -68,8 +67,26 @@ async function busca() {
 
 /** @param {Event} evt */
 async function guarda(evt) {
-  await guardaUsuario(evt,
-    new FormData(forma), id);
+    new formData(forma);
+  try {
+    evt.preventDefault();
+    const nombre = getString(
+      formData, "nombre").trim();
+    const precio = getString(
+      formData, "precio").trim();
+    const descripcion = getString(
+      formData, "descripcion").trim();
+    await daoArticulos.
+      doc(id).
+      set({
+        descripcion,
+        nombre,
+        precio
+      });
+    location.href = "articulos.html";
+  } catch (e) {
+    muestraError(e);
+  }
 }
 
 async function elimina() {
