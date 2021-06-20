@@ -49,6 +49,8 @@ async function agrega(evt) {
       formData, "precio").trim();
     const descripcion = getString(
       formData, "descripcion").trim();
+    /** @type {import(
+        "./tipos.js").Mensaje} */
     const modelo = {
       nombre,
       precio,
